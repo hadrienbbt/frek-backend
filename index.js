@@ -7,7 +7,7 @@ const cron = require('node-cron')
 const keys = require('./.keys/ssl.json')
 
 const port = process.env.PORT || 8080
-const crowdFetcher = require('./crowdFetcher')
+const crowdFetcher = require('./src/crowdFetcher')
 
 const getCrowd = async (req, res) => {
   const state = await crowdFetcher.getState()
