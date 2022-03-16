@@ -1,13 +1,12 @@
 const fs = require('fs')
+const http = require('http')
+const https = require('https')
 const express = require('express')
 const cron = require('node-cron')
 
-const port = process.env.PORT || 8080
-const options = {
-  cert: fs.readFileSync(`/etc/letsencrypt/live/fedutia.fr/cert.pem`),
-  key: fs.readFileSync(`/etc/letsencrypt/live/fedutia.fr/privkey.pem`)
-}
+const keys = require('./.keys/ssl.json')
 
+const port = process.env.PORT || 8080
 const crowdFetcher = require('./crowdFetcher')
 
 const getCrowd = async (req, res) => {
@@ -24,9 +23,20 @@ app.use((req, res, next) => {
   })
   .get('/', getCrowd)
 
-const https = require('https')
-    .createServer(options, app)
-    .listen(port, _ => console.log('Listening https on port ' + port))
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV == 'development') {
+  http
+      .createServer(app)
+      .listen(port, _ => console.log('Listening http on port ' + port))
+} else {
+  const options = {
+      cert: fs.readFileSync(keys.cert),
+      key: fs.readFileSync(keys.privkey)
+  }
+  https
+      .createServer(options, app)
+      .listen(port, _ => console.log('Listening https on port ' + port))
+}
 
 // crowdFetcher.fetchAll()
 // cron.schedule('0,30 * * * *', async () => await crowdFetcher.fetchAll())
