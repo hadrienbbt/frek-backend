@@ -4,8 +4,6 @@ const https = require('https')
 const express = require('express')
 const cron = require('node-cron')
 
-const keys = require('./.keys/ssl.json')
-
 const port = process.env.PORT || 8080
 const crowdFetcher = require('./src/crowdFetcher')
 
@@ -29,6 +27,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == 'development') {
       .createServer(app)
       .listen(port, _ => console.log('Listening http on port ' + port))
 } else {
+  const keys = require('./.keys/ssl.json')
+
   const options = {
       cert: fs.readFileSync(keys.cert),
       key: fs.readFileSync(keys.privkey)
