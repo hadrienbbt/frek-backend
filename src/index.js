@@ -34,7 +34,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == 'development') {
   const key = process.env.SSL_KEY
   const options = {
       cert: fs.readFileSync(cert),
-      key: fs.readFileSync(privkey)
+      key: fs.readFileSync(key)
   }
   https
       .createServer(options, app)
