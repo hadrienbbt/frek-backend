@@ -1,5 +1,5 @@
 
-module.exports = {
+export default {
   "Beaubourg": "beaubourg",
   "Châtelet": "chatelet-4eme",
   "Cherche Midi": "cherche-midi-6eme",

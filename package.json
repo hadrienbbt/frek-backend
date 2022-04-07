@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Gym frequentation",
   "main": "index.js",
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
+    "build": "babel src -d lib",
+    "start": "npm run build && node lib/index.js",
     "test": "test"
   },
   "keywords": [
@@ -12,6 +17,8 @@
   "author": "Hadrien Barbat",
   "license": "ISC",
   "dependencies": {
+    "core-js": "^3.21.1",
+    "dotenv": "^16.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "http": "^0.0.1-security",
@@ -19,5 +26,10 @@
     "mongojs": "^2.6.0",
     "node-cron": "^3.0.0",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11"
   }
 }

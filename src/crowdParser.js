@@ -1,8 +1,8 @@
-const moment = require('moment')
-const FrekWebsiteSuffix = require('./FrekWebsiteSuffix')
+import moment from 'moment'
+import FrekWebsiteSuffix from './FrekWebsiteSuffix'
 const incrementalArray = size => Array.apply(null, Array(size)).map((_, index) => index)
 
-module.exports.parse = (frekId, name, gymHtml, frekHtml) => {
+const parse = (frekId, name, gymHtml, frekHtml) => {
   const crowd = findCrowd(frekHtml)
   const spotsAvailable = findSpotsAvailable(frekHtml)
   const fmi = spotsAvailable + crowd
@@ -25,7 +25,7 @@ module.exports.parse = (frekId, name, gymHtml, frekHtml) => {
   } 
 }
 
-module.exports.findFrekId = html => {
+const findFrekId = html => {
   console.log('\n⏳ Searching for frek id...')
   const frekId = findSubstringBetween(html, 'https://api.cdf.resamania.com/cdf/public/attendances/', '/light?graph=')
   if (!frekId) {
@@ -169,3 +169,5 @@ const findSubstringBetween = (str, start, end) => {
   }
   return substring.substring(0, endIndex)
 }
+
+export { parse, findFrekId }

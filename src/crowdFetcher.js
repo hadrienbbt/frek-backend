@@ -1,11 +1,12 @@
-const mongojs = require('mongojs'),
-  db = mongojs(process.env.MONGO_URL || 'mongodb://localhost:27017/frek'),
-  frekPlaces = db.collection('frekPlaces')
-  request = require('request'),
-  crowdParser = require('./crowdParser'),
-  FrekWebsiteSuffix = require('./FrekWebsiteSuffix')
+import request from 'request'
+import mongojs from 'mongojs'
+const db = mongojs(process.env.MONGO_URL || 'mongodb://localhost:27017/frek')
+const frekPlaces = db.collection('frekPlaces')
 
-module.exports.getState = () => new Promise(resolve => {
+import crowdParser from './crowdParser'
+import FrekWebsiteSuffix from './FrekWebsiteSuffix'
+
+const getState = () => new Promise(resolve => {
   frekPlaces.find((err, docs) => {
     if (err) {
       console.error("❌ Can't get frekplaces in db" + err)
@@ -16,7 +17,7 @@ module.exports.getState = () => new Promise(resolve => {
   })
 })
 
-module.exports.fetchAll = async () => {
+const fetchAll = async () => {
   await Promise.all(
     Object
       .keys(FrekWebsiteSuffix)
@@ -93,3 +94,5 @@ const fetchHTML = async url => new Promise((resolve, reject) => {
     resolve(body)
   })
 })
+
+export { getState, fetchAll }
