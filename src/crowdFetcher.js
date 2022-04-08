@@ -1,21 +1,16 @@
+import admin from 'firebase-admin'
 import request from 'request'
-import mongojs from 'mongojs'
-const db = mongojs(process.env.MONGO_URL || 'mongodb://localhost:27017/frek')
-const frekPlaces = db.collection('frekPlaces')
 
 import crowdParser from './crowdParser'
 import FrekWebsiteSuffix from './FrekWebsiteSuffix'
 
-const getState = () => new Promise(resolve => {
-  frekPlaces.find((err, docs) => {
-    if (err) {
-      console.error("❌ Can't get frekplaces in db" + err)
-      reject()
-      return
-    }
-    resolve(docs)
-  })
-})
+const getFrekplaces = async () => {
+  const snap = await admin
+    .firestore()
+    .collection('frekplaces')
+    .get()
+  return snap.docs.map(doc => doc.data())
+}
 
 const fetchAll = async () => {
   await Promise.all(
@@ -42,25 +37,18 @@ const fetchAll = async () => {
             console.error("❌ Can't create Frekplace with id: " + frekId)
             return
         }
-        console.log(frekPlace)
-        await saveFrekPlace(frekPlace)
-        console.log('✅ Frek saved successfully', frekPlace)
+        await saveFrekplaces(frekPlace)
       })
   )
 }
 
-const saveFrekPlace = frekPlace => new Promise((resolve, reject) => {
-  const query = { frekId: frekPlace.frekId }
-  const update = { $set: frekPlace }
-  frekPlaces.findAndModify({ query, update, new: true, upsert: true }, err => {
-    if (err) {
-      console.error("❌ Can't update frekplace in db" + err)
-      reject()
-      return
-    }
-    resolve()
-  })
-})
+const saveFrekplaces = async frekplace => admin
+  .firestore()
+  .collection('frekplaces')
+  .doc(frekplace.frekId)
+  .set(frekplace, { merge: true })
+  .then(() => console.log('✅ Frek saved successfully', frekplace))
+  .catch(e => console.error("❌ Can't update frekplace in firestore" + e))
 
 const fetchGymHTML = async suffix => {
   const url = `https://www.cerclesdelaforme.com/salle-de-sport/${suffix}/`
@@ -95,4 +83,4 @@ const fetchHTML = async url => new Promise((resolve, reject) => {
   })
 })
 
-export { getState, fetchAll }
+export { getFrekplaces, fetchAll }
