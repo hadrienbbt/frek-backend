@@ -17,19 +17,19 @@
   "author": "Hadrien Barbat",
   "license": "ISC",
   "dependencies": {
-    "core-js": "^3.21.1",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.1",
-    "firebase-admin": "^10.0.2",
+    "core-js": "^3.39.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.1",
     "fs": "0.0.1-security",
     "http": "^0.0.1-security",
-    "moment": "^2.29.1",
-    "node-cron": "^3.0.0",
+    "moment": "^2.30.1",
+    "node-cron": "^3.0.3",
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.17.6",
-    "@babel/core": "^7.17.8",
-    "@babel/preset-env": "^7.16.11"
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0"
   }
 }
