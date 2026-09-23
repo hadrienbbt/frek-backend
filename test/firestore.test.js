@@ -8,10 +8,14 @@
 // - they authenticate with a throwaway key that has no access to any project;
 // - they clear data through the emulator-only reset endpoint, which does not
 //   exist on the real Firestore service.
-const { test, before, beforeEach, afterEach } = require('node:test')
-const assert = require('node:assert/strict')
+import { test, before, beforeEach, afterEach } from 'node:test'
+import assert from 'node:assert/strict'
 
-const { throwawayServiceAccount, startServer } = require('./helpers/server.js')
+import { initializeApp, cert } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
+
+import * as crowdFetcher from '../src/crowdFetcher.js'
+import { throwawayServiceAccount, startServer } from './helpers/server.js'
 
 const emulatorHost = process.env.FIRESTORE_EMULATOR_HOST
 const projectId = process.env.GCLOUD_PROJECT || 'demo-frek'
@@ -23,7 +27,6 @@ const clearEmulator = async () => {
   assert.equal(response.status, 200, `emulator reset failed: ${response.status}`)
 }
 
-let crowdFetcher
 let frekplaces
 
 before(() => {
@@ -31,10 +34,7 @@ before(() => {
   assert.match(emulatorHost, /^(127\.0\.0\.1|localhost|\[::1\]):\d+$/, 'the emulator must run on a loopback address')
   assert.match(projectId, /^demo-/, 'the emulator tests only run against a demo- project')
 
-  const { initializeApp, cert } = require('firebase-admin/app')
-  const { getFirestore } = require('firebase-admin/firestore')
   initializeApp({ credential: cert(throwawayServiceAccount(projectId)) }) // same call as src/index.js
-  crowdFetcher = require('../lib/crowdFetcher.js')
   frekplaces = getFirestore().collection('frekplaces')
 })
 
@@ -86,7 +86,7 @@ test('security rules deny direct client reads and writes', { skip }, async () =>
   assert.deepEqual((await frekplaces.doc('a').get()).data(), { frekId: 'a', name: 'Beaubourg', crowd: 1 })
 })
 
-test('the built server boots like production and serves /gym', { skip }, async t => {
+test('the server boots like production and serves /gym', { skip }, async t => {
   await frekplaces.doc('a').set({ frekId: 'a', name: 'Beaubourg', crowd: 1 })
 
   const server = await startServer(t, { firestoreHost: emulatorHost, projectId })

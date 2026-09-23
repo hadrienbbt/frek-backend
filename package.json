@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "description": "Gym frequentation",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/index.js",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "build": "babel src -d lib",
-    "start": "npm run build && node lib/index.js",
-    "test": "npm run build && node --test test/*.test.js",
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js",
     "test:emulator": "firebase emulators:exec --only firestore --project demo-frek \"npm test\""
   },
   "keywords": [
@@ -19,17 +19,11 @@
   "author": "Hadrien Barbat",
   "license": "ISC",
   "dependencies": {
-    "core-js": "^3.39.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase-admin": "^14.4.0",
     "moment": "^2.30.1",
     "node-cron": "^4.6.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.26.4",
-    "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0"
   },
   "overrides": {
     "gaxios": {

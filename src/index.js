@@ -6,13 +6,13 @@ import https from 'https'
 import express from 'express'
 import cron from 'node-cron'
 import { initializeApp, cert } from 'firebase-admin/app'
-import serviceAccount from '../.keys/frek-bcee6-firebase-adminsdk-e9ux7-86e9839f98.json'
+import serviceAccount from '../.keys/frek-bcee6-firebase-adminsdk-e9ux7-86e9839f98.json' with { type: 'json' }
 
 initializeApp({
   credential: cert(serviceAccount)
 })
 
-import { getFrekplaces, fetchAll } from './crowdFetcher'
+import { getFrekplaces, fetchAll } from './crowdFetcher.js'
 
 const port = process.env.PORT || 8080
 

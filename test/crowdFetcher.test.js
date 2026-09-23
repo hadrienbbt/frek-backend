@@ -1,10 +1,10 @@
 // Pins fetchHTML's contract with a local HTTP server: resolve the body text on
 // 2xx, reject with no reason on non-2xx or network errors, follow redirects.
-const { test, before, after, beforeEach, afterEach } = require('node:test')
-const assert = require('node:assert/strict')
-const http = require('node:http')
+import { test, before, after, beforeEach, afterEach } from 'node:test'
+import assert from 'node:assert/strict'
+import http from 'node:http'
 
-const { fetchHTML } = require('../lib/crowdFetcher.js')
+import { fetchHTML } from '../src/crowdFetcher.js'
 
 const BODY = '<html><body>Salle de sport · Châtelet 4ème — places : 42</body></html>'
 
