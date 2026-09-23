@@ -1,5 +1,4 @@
 import admin from 'firebase-admin'
-import request from 'request'
 
 import crowdParser from './crowdParser'
 import FrekWebsiteSuffix from './FrekWebsiteSuffix'
@@ -66,21 +65,30 @@ const fetchFrekHTML = async id => {
   return await fetchHTML(url)
 }
 
-const fetchHTML = async url => new Promise((resolve, reject) => {
+// Uses Node's built-in fetch. Contract kept from the former `request`-based
+// version: resolve the body text on 2xx, follow redirects, and reject with no
+// reason on network errors or non-2xx statuses.
+const fetchHTML = async url => {
   console.log("\n⏳ Fetching html...")
-  request(url, (error, response, body) => {
-    if (error) {
-      console.error('❌ Error: ' + error)
-      reject()
-      return
-    }
-    if (response.statusCode < 200 || response.statusCode > 299) {
-      console.error('❌ Invalid response or http code: ' + response.statusCode)
-      reject()
-      return
-    }
-    resolve(body)
-  })
-})
+  let response
+  try {
+    response = await fetch(url)
+  } catch (error) {
+    // fetch wraps network failures in "TypeError: fetch failed"; log the cause.
+    console.error('❌ Error: ' + (error.cause || error))
+    return Promise.reject()
+  }
+  if (response.status < 200 || response.status > 299) {
+    console.error('❌ Invalid response or http code: ' + response.status)
+    response.body?.cancel().catch(() => {}) // release the connection
+    return Promise.reject()
+  }
+  try {
+    return await response.text()
+  } catch (error) {
+    console.error('❌ Error: ' + (error.cause || error))
+    return Promise.reject()
+  }
+}
 
 export { getFrekplaces, fetchAll, fetchHTML }
