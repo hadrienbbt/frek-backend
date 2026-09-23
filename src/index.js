@@ -25,7 +25,7 @@ const fetchFrekplaces = async (req, res) => {
     res.status(200).send(frekplaces)
   } catch (error) {
     console.error("❌ Can't read frekplaces from firestore: " + error)
-    res.status(503).send({ error: 'Service unavailable' })
+    if (!res.headersSent) res.status(503).send({ error: 'Service unavailable' })
   }
 }
 
