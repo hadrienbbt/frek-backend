@@ -1,11 +1,10 @@
-import admin from 'firebase-admin'
+import { getFirestore } from 'firebase-admin/firestore'
 
 import crowdParser from './crowdParser'
 import FrekWebsiteSuffix from './FrekWebsiteSuffix'
 
 const getFrekplaces = async () => {
-  const snap = await admin
-    .firestore()
+  const snap = await getFirestore()
     .collection('frekplaces')
     .get()
   return snap.docs.map(doc => doc.data())
@@ -41,8 +40,7 @@ const fetchAll = async () => {
   )
 }
 
-const saveFrekplaces = async frekplace => admin
-  .firestore()
+const saveFrekplaces = async frekplace => getFirestore()
   .collection('frekplaces')
   .doc(frekplace.frekId)
   .set(frekplace, { merge: true })

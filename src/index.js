@@ -5,11 +5,11 @@ import http from 'http'
 import https from 'https'
 import express from 'express'
 import cron from 'node-cron'
-import admin from 'firebase-admin'
+import { initializeApp, cert } from 'firebase-admin/app'
 import serviceAccount from '../.keys/frek-bcee6-firebase-adminsdk-e9ux7-86e9839f98.json'
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+initializeApp({
+  credential: cert(serviceAccount)
 })
 
 import { getFrekplaces, fetchAll } from './crowdFetcher'
