@@ -9,7 +9,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "start": "npm run build && node lib/index.js",
-    "test": "test"
+    "test": "npm run build && node --test test/*.test.js"
   },
   "keywords": [
     "gym"

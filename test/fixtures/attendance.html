@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8">
+<style>
+  header .indicator { background: #24B52A ; border-radius: 50%; }
+</style>
+</head>
+<body>
+<!-- Synthetic fixture modelled on the 2021 api.cdf.resamania.com attendance page. -->
+<header><span class="indicator"></span> Ouvert</header>
+<div class="attendance">42 personnes présentes</div>
+<p>Places disponibles : <span class="value">1 58</span></p>
+<script>
+  var canvas1 = document.getElementById("chart-1");
+  new Chart(canvas1, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [1, 2, null, 3],
+        borderColor: "#cccccc"
+      }, {
+        data: [10, 20, 30, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  var canvas2 = document.getElementById("chart-2");
+  new Chart(canvas2, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [2, 4, null, 6],
+        borderColor: "#cccccc"
+      }, {
+        data: [20, 40, 60, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  var canvas3 = document.getElementById("chart-3");
+  new Chart(canvas3, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [3, 6, null, 9],
+        borderColor: "#cccccc"
+      }, {
+        data: [30, 60, 90, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  var canvas5 = document.getElementById("chart-5");
+  new Chart(canvas5, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [5, 10, null, 15],
+        borderColor: "#cccccc"
+      }, {
+        data: [50, 100, 150, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  var canvas6 = document.getElementById("chart-6");
+  new Chart(canvas6, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [6, 12, null, 18],
+        borderColor: "#cccccc"
+      }, {
+        data: [60, 120, 180, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  var canvas7 = document.getElementById("chart-7");
+  new Chart(canvas7, {
+    type: "line",
+    data: {
+      labels: ["06h", "07h", "08h", "09h"],
+      datasets: [{
+        data: [7, 14, null, 21],
+        borderColor: "#cccccc"
+      }, {
+        data: [70, 140, 210, "x"],
+        pointStyle: "line"
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+</body>
+</html>

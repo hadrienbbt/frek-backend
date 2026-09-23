@@ -83,4 +83,4 @@ const fetchHTML = async url => new Promise((resolve, reject) => {
   })
 })
 
-export { getFrekplaces, fetchAll }
+export { getFrekplaces, fetchAll, fetchHTML }
