@@ -67,6 +67,25 @@ test('saveFrekplaces merges into the existing document', { skip }, async () => {
   assert.deepEqual((await frekplaces.doc('x').get()).data(), { frekId: 'x', id: 'kept', name: 'Nation', crowd: 5 })
 })
 
+test('security rules deny direct client reads and writes', { skip }, async () => {
+  await frekplaces.doc('a').set({ frekId: 'a', name: 'Beaubourg', crowd: 1 })
+  const url = `http://${emulatorHost}/v1/projects/${projectId}/databases/(default)/documents/frekplaces/a`
+
+  // No Authorization header: the request is treated like any client on the internet.
+  const read = await fetch(url)
+  assert.equal(read.status, 403)
+  const write = await fetch(`${url}?updateMask.fieldPaths=name`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: { name: { stringValue: 'changed' } } }),
+  })
+  assert.equal(write.status, 403)
+  const remove = await fetch(url, { method: 'DELETE' })
+  assert.equal(remove.status, 403)
+
+  assert.deepEqual((await frekplaces.doc('a').get()).data(), { frekId: 'a', name: 'Beaubourg', crowd: 1 })
+})
+
 test('the built server boots like production and serves /gym', { skip }, async t => {
   await frekplaces.doc('a').set({ frekId: 'a', name: 'Beaubourg', crowd: 1 })
 
