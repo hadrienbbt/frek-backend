@@ -1,15 +1,16 @@
 // Characterization tests: they pin the parser's current output so dependency
-// upgrades (moment, Babel, core-js) cannot change it silently.
+// upgrades (moment) or module-format changes cannot change it silently.
+import { test, beforeEach, afterEach } from 'node:test'
+import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { parse, findFrekId } from '../src/crowdParser.js'
+
+// Set before any Date is created; Node applies TZ changes at runtime.
 process.env.TZ = 'UTC'
 
-const { test, beforeEach, afterEach } = require('node:test')
-const assert = require('node:assert/strict')
-const fs = require('node:fs')
-const path = require('node:path')
-
-const { parse, findFrekId } = require('../lib/crowdParser.js')
-
-const fixture = name => fs.readFileSync(path.join(__dirname, 'fixtures', name), 'utf8')
+const fixture = name => fs.readFileSync(path.join(import.meta.dirname, 'fixtures', name), 'utf8')
 const gymHtml = fixture('gym.html')
 const attendanceHtml = fixture('attendance.html')
 

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import FrekWebsiteSuffix from './FrekWebsiteSuffix'
+import FrekWebsiteSuffix from './FrekWebsiteSuffix.js'
 const incrementalArray = size => Array.apply(null, Array(size)).map((_, index) => index)
 
 const parse = (frekId, name, gymHtml, frekHtml) => {

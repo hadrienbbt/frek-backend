@@ -1,7 +1,7 @@
 import { getFirestore } from 'firebase-admin/firestore'
 
-import crowdParser from './crowdParser'
-import FrekWebsiteSuffix from './FrekWebsiteSuffix'
+import * as crowdParser from './crowdParser.js'
+import FrekWebsiteSuffix from './FrekWebsiteSuffix.js'
 
 const getFrekplaces = async () => {
   const snap = await getFirestore()

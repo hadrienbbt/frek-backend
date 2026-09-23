@@ -1,9 +1,9 @@
-// Starts the built server against a Firestore stand-in that rejects every call.
+// Starts the server against a Firestore stand-in that rejects every call.
 // No emulator or network access is needed; nothing reaches a real database.
-const { test } = require('node:test')
-const assert = require('node:assert/strict')
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
 
-const { startServer, startFailingFirestore } = require('./helpers/server.js')
+import { startServer, startFailingFirestore } from './helpers/server.js'
 
 test('/gym answers 503 and the server keeps running when Firestore fails', async t => {
   const firestore = await startFailingFirestore(t)
