@@ -5,24 +5,34 @@ import http from 'http'
 import https from 'https'
 import express from 'express'
 import cron from 'node-cron'
-import admin from 'firebase-admin'
+import { initializeApp, cert } from 'firebase-admin/app'
 import serviceAccount from '../.keys/frek-bcee6-firebase-adminsdk-e9ux7-86e9839f98.json'
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+initializeApp({
+  credential: cert(serviceAccount)
 })
 
 import { getFrekplaces, fetchAll } from './crowdFetcher'
 
 const port = process.env.PORT || 8080
 
+// A failed Firestore read (quota exhausted, network error) used to reject
+// outside Express 4's error handling, and Node 22 exits on unhandled
+// rejections, so one failed read took the whole server down.
 const fetchFrekplaces = async (req, res) => {
-  const frekplaces = await getFrekplaces()
-  res.status(200).send(frekplaces)
+  try {
+    const frekplaces = await getFrekplaces()
+    res.status(200).send(frekplaces)
+  } catch (error) {
+    console.error("❌ Can't read frekplaces from firestore: " + error)
+    if (!res.headersSent) res.status(503).send({ error: 'Service unavailable' })
+  }
 }
 
 const app = express()
+app.disable('x-powered-by')
 app.use((req, res, next) => {
+    res.header("X-Content-Type-Options", "nosniff")
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     res.header("Access-Control-Allow-Methods", "DELETE,GET,HEAD,PATCH,POST,PUT,OPTIONS")
