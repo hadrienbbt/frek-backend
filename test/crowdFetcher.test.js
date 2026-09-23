@@ -24,6 +24,13 @@ before(async () => {
       case '/redirect':
         res.writeHead(302, { Location: '/ok' })
         return res.end()
+      case '/redirect-without-location':
+        res.writeHead(302)
+        return res.end('moved')
+      case '/truncated':
+        // Promise 100 bytes, send 10, then drop the connection.
+        res.writeHead(200, { 'Content-Type': 'text/html', 'Content-Length': '100' })
+        return res.write('0123456789', () => res.destroy())
       case '/bad-request':
         res.writeHead(400, { 'Content-Type': 'text/html' })
         return res.end('<title>An Error Occurred: Bad Request</title>')
@@ -81,7 +88,7 @@ test('follows redirects', async () => {
   assert.equal(await fetchHTML(`${baseUrl}/redirect`), BODY)
 })
 
-for (const [path, status] of [['/bad-request', 400], ['/missing', 404], ['/server-error', 500]]) {
+for (const [path, status] of [['/redirect-without-location', 302], ['/bad-request', 400], ['/missing', 404], ['/server-error', 500]]) {
   test(`rejects without a reason on HTTP ${status}`, async () => {
     assert.deepEqual(await rejectionOf(fetchHTML(`${baseUrl}${path}`)), { rejected: true, reason: undefined })
     assert.deepEqual(logs.error, [`❌ Invalid response or http code: ${status}`])
@@ -90,6 +97,12 @@ for (const [path, status] of [['/bad-request', 400], ['/missing', 404], ['/serve
 
 test('rejects without a reason when the connection is refused', async () => {
   assert.deepEqual(await rejectionOf(fetchHTML(closedPortUrl)), { rejected: true, reason: undefined })
+  assert.equal(logs.error.length, 1)
+  assert.match(logs.error[0], /^❌ Error: .*ECONNREFUSED/) // the cause, not just "fetch failed"
+})
+
+test('rejects without a reason when the connection drops mid-body', async () => {
+  assert.deepEqual(await rejectionOf(fetchHTML(`${baseUrl}/truncated`)), { rejected: true, reason: undefined })
   assert.equal(logs.error.length, 1)
   assert.match(logs.error[0], /^❌ Error: /)
 })

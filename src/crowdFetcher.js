@@ -89,4 +89,4 @@ const fetchHTML = async url => {
   }
 }
 
-export { getFrekplaces, fetchAll, fetchHTML }
+export { getFrekplaces, saveFrekplaces, fetchAll, fetchHTML }
