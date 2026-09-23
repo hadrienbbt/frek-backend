@@ -16,9 +16,17 @@ import { getFrekplaces, fetchAll } from './crowdFetcher'
 
 const port = process.env.PORT || 8080
 
+// A failed Firestore read (quota exhausted, network error) used to reject
+// outside Express 4's error handling, and Node 22 exits on unhandled
+// rejections, so one failed read took the whole server down.
 const fetchFrekplaces = async (req, res) => {
-  const frekplaces = await getFrekplaces()
-  res.status(200).send(frekplaces)
+  try {
+    const frekplaces = await getFrekplaces()
+    res.status(200).send(frekplaces)
+  } catch (error) {
+    console.error("❌ Can't read frekplaces from firestore: " + error)
+    res.status(503).send({ error: 'Service unavailable' })
+  }
 }
 
 const app = express()
