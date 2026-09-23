@@ -5,6 +5,12 @@
 .keys/
 lib/
 
+# Keys and certificates must never be committed
+*.pem
+*.key
+*.p12
+*.pfx
+
 # Logs
 logs
 *.log
@@ -78,6 +84,7 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.*
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
